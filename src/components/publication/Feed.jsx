@@ -1,160 +1,98 @@
-import avatar from '../../assets/img/user.png'
-
+import { useEffect, useState } from "react";
+import { Global } from "../../helpers/Global";
 
 export const Feed = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      try {
+        const response = await fetch(`${Global.url}publication/publications`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setPosts(result.publications || []);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    getPosts();
+  }, []);
 
   return (
-    <>
-      <header className="content__header">
-        <h1 className="content__title">Timeline</h1>
-        <button className="content__button">Mostrar nuevas</button>
+    <div
+      className="mt-4 px-3"
+      style={{
+        width: "100%",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <header className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="display-4 fs-3">Timeline</h1>
+        <button className="btn btn-success">Show New</button>
       </header>
 
-      <div className="content__posts">
-
-        <div className="posts__post">
-
-          <div className="post__container">
-
-            <div className="post__image-user">
-              <a href="#" className="post__image-link">
-                <img src={avatar} className="post__user-image" alt="Foto de perfil" />
-              </a>
-            </div>
-
-            <div className="post__body">
-
-              <div className="post__user-info">
-                <a href="#" className="user-info__name">Inés Oliveros</a>
-                <span className="user-info__divider"> | </span>
-                <a href="#" className="user-info__create-date">Hace 1 hora</a>
+      <div
+        className="d-flex overflow-auto"
+        style={{
+          margin: "30px 15px",
+        }}
+      >
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div
+              className="card mr-3 border border-primary"
+              style={{
+                display: "inline-block",
+                width: "300px",
+                margin: "10px",
+              }}
+              key={post._id}
+            >
+              <div className="card-header d-flex align-items-center rounded-lg">
+                <img
+                  className="rounded-circle mr-3"
+                  src={`${Global.url}user/avatar/${post.user_id.image}`}
+                  alt="User avatar"
+                  width="200"
+                  height="200"
+                />
+                <div>
+                  <h5 className="mb-0 fs-4">
+                    {`${post.user_id.name} ${post.user_id.last_name}`}
+                  </h5>
+                  <small className="text-muted fs-6">{post.user_id.nick}</small>
+                </div>
               </div>
-
-              <h4 className="post__content">Hola, buenos días.</h4>
-
-            </div>
-
-          </div>
-
-
-          <div className="post__buttons">
-
-            <a href="#" className="post__button">
-              <i className="fa-solid fa-trash-can"></i>
-            </a>
-
-          </div>
-
-        </div>
-
-        <div className="posts__post">
-
-          <div className="post__container">
-
-            <div className="post__image-user">
-              <a href="#" className="post__image-link">
-                <img src={avatar} className="post__user-image" alt="Foto de perfil" />
-              </a>
-            </div>
-
-            <div className="post__body">
-
-              <div className="post__user-info">
-                <a href="#" className="user-info__name">Inés Oliveros</a>
-                <span className="user-info__divider"> | </span>
-                <a href="#" className="user-info__create-date">Hace 1 hora</a>
+              <div className="card-body">
+                <p className="card-text fs-5">{post.text}</p>
               </div>
-
-              <h4 className="post__content">Hola, buenos días.</h4>
-
-            </div>
-          </div>
-
-          <div className="post__buttons">
-
-            <a href="#" className="post__button">
-              <i className="fa-solid fa-trash-can"></i>
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <div className="posts__post">
-
-          <div className="post__container">
-
-            <div className="post__image-user">
-              <a href="#" className="post__image-link">
-                <img src={avatar} className="post__user-image" alt="Foto de perfil" />
-              </a>
-            </div>
-
-            <div className="post__body">
-
-              <div className="post__user-info">
-                <a href="#" className="user-info__name">Inés Oliveros</a>
-                <span className="user-info__divider"> | </span>
-                <a href="#" className="user-info__create-date">Hace 1 hora</a>
+              <div className="card-footer d-flex justify-content-between">
+                <button className="btn btn-outline-success">Like</button>
+                <button className="btn btn-outline-secondary">Comment</button>
               </div>
-
-              <h4 className="post__content">Hola, buenos días.</h4>
-
             </div>
-          </div>
-
-          <div className="post__buttons">
-
-            <a href="#" className="post__button">
-              <i className="fa-solid fa-trash-can"></i>
-            </a>
-
-          </div>
-
-        </div>
-
-        <div className="posts__post">
-
-          <div className="post__container">
-
-            <div className="post__image-user">
-              <a href="#" className="post__image-link">
-                <img src={avatar} className="post__user-image" alt="Foto de perfil" />
-              </a>
-            </div>
-
-            <div className="post__body">
-
-              <div className="post__user-info">
-                <a href="#" className="user-info__name">Inés Oliveros</a>
-                <span className="user-info__divider"> | </span>
-                <a href="#" className="user-info__create-date">Hace 1 hora</a>
-              </div>
-
-              <h4 className="post__content">Hola, buenos días.</h4>
-
-            </div>
-          </div>
-
-          <div className="post__buttons">
-
-            <a href="#" className="post__button">
-              <i className="fa-solid fa-trash-can"></i>
-            </a>
-
-          </div>
-
-        </div>
-
-
+          ))
+        ) : (
+          <p className="fs-5">No posts available</p>
+        )}
       </div>
 
-      <div className="content__container-btn">
-        <button className="content__btn-more-post">
-          Ver más publicaciones
-        </button>
+      <div className="d-flex justify-content-center mt-4">
+        <button className="btn btn-success fs-5">See More Posts</button>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
